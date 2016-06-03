@@ -5,8 +5,8 @@ Usage
 ::
 
     # resistivity formulation
-    import sip_models.res.cc
     import sip_models.res.ccd
+    import sip_models.res.cc
     import sip_models.res.dd
     import sip_models.res.warburg
     import sip_models.res.ccd_em
