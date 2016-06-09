@@ -1,0 +1,8 @@
+setup.py
+lib/pysip.egg-info/PKG-INFO
+lib/pysip.egg-info/SOURCES.txt
+lib/pysip.egg-info/dependency_links.txt
+lib/pysip.egg-info/requires.txt
+lib/pysip.egg-info/top_level.txt
+lib/sip_models/__init__.py
+test/test.py
