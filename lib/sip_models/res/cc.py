@@ -28,7 +28,7 @@ class cc(object):
         # type 1
         if isinstance(parameters, (list, tuple, np.ndarray)):
             pars = np.atleast_1d(parameters)
-            nr_pars = (pars.shape[0] - 1) / 3
+            nr_pars = int((pars.shape[0] - 1) / 3)
 
             rho0 = pars[0]
             m = pars[1:nr_pars + 1]
@@ -41,17 +41,16 @@ class cc(object):
             tau = _make_list(parameters['tau'])
             c = _make_list(parameters['c'])
         else:
-            print parameters
+            print(parameters)
             raise Exception('Input format not recognized')
 
         return rho0, m, tau, c
 
+    def test_sort_parameters(self):
+        self._sort_parameters((100, 0.1, 0.04, 0.5))
+        self._sort_parameters((100, 0.1, 0.04, 0.5, 0.2, 0.004, 0.6))
 
-    def test_sort_parameters():
-        _sort_parameters((100, 0.1, 0.04, 0.5))
-        _sort_parameters((100, 0.1, 0.04, 0.5, 0.2, 0.004, 0.6))
-
-        _sort_parameters(
+        self._sort_parameters(
             {'rho0': 100,
              'm': 0.1,
              'tau': 0.04,
@@ -59,7 +58,7 @@ class cc(object):
              }
         )
 
-        _sort_parameters(
+        self._sort_parameters(
             {'rho0': 100,
              'm': (0.1, 0.2),
              'tau': (0.04, 0.004),
@@ -88,7 +87,7 @@ class cc(object):
         rho0, m, tau, c = self._sort_parameters(parameters)
 
         newsize = (nr_f, len(m))
-        rho0_resized = np.resize(rho0, newsize)
+        # rho0_resized = np.resize(rho0, newsize)
         m_resized = np.resize(m, newsize)
         tau_resized = np.resize(tau, newsize)
         c_resized = np.resize(c, newsize)
@@ -105,7 +104,6 @@ class cc(object):
         self.otc2 = (self.w * self.tau) ** (2 * self.c)
         self.ang = self.c * np.pi / 2.0  # rad
         self.denom = 1 + 2 * self.otc * np.cos(self.ang) + self.otc2
-
 
     def response(self, parameters):
         r"""Complex response of the Cole-Cole model::
@@ -132,7 +130,6 @@ class cc(object):
 
         return response
 
-
     def test_response(self):
         parameters = {
             'rho0': 100,
@@ -148,7 +145,6 @@ class cc(object):
         }
         resp = self.response(parameters)
         resp.plot('test.png')
-
 
     def dre_drho0(self, pars):
         r"""
@@ -387,21 +383,21 @@ class cc(object):
         #     'tau': (0.4, 0.004),
         #     'c': (0.5, 0.8),
         # }
-        print self.dre_drho0(parameters)
-        print self.dre_dlog10rho0(parameters)
-        print self.dre_dm(parameters)
-        print self.dre_dlog10m(parameters)
-        print self.dre_dtau(parameters)
-        print self.dre_dlog10tau(parameters)
-        print self.dre_dc(parameters)
+        print(self.dre_drho0(parameters))
+        print(self.dre_dlog10rho0(parameters))
+        print(self.dre_dm(parameters))
+        print(self.dre_dlog10m(parameters))
+        print(self.dre_dtau(parameters))
+        print(self.dre_dlog10tau(parameters))
+        print(self.dre_dc(parameters))
 
-        print self.dim_drho0(parameters)
-        print self.dim_dlog10rho0(parameters)
-        print self.dim_dm(parameters)
-        print self.dim_dlog10m(parameters)
-        print self.dim_dtau(parameters)
-        print self.dim_dlog10tau(parameters)
-        print self.dim_dc(parameters)
+        print(self.dim_drho0(parameters))
+        print(self.dim_dlog10rho0(parameters))
+        print(self.dim_dm(parameters))
+        print(self.dim_dlog10m(parameters))
+        print(self.dim_dtau(parameters))
+        print(self.dim_dlog10tau(parameters))
+        print(self.dim_dc(parameters))
 
 if __name__ == '__main__':
 
