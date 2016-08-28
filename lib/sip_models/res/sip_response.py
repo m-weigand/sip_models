@@ -4,8 +4,9 @@
 """
 import sip_formats.convert as SC
 import numpy as np
-from crlab_py.mpl import *
+import matplotlib as mpl
 mpl.rcParams['font.size'] = 8.0
+import pylab as plt
 
 
 class sip_response():
@@ -49,7 +50,6 @@ class sip_response():
 
         self.rre_rim = np.vstack((self.rre, self.rim)).T
         self.cre_cim = np.vstack((self.cre, self.cim)).T
-
 
     def plot(self, filename):
         """Standard plot of spectrum
