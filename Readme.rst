@@ -1,3 +1,11 @@
+Introduction
+============
+
+Provide Python classes for the Cole-Cole model, both in resistivities and
+conductivities.
+
+Planned is also the implementation of derived models such as the Debye
+decomposition or the Warburg model.
 
 Usage
 =====

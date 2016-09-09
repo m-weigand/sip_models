@@ -8,7 +8,7 @@ discrimination and removal of inductive coupling with multifrequency ip.
 Geophysics, 43(3):588–609.
 """
 import numpy as np
-import sip_response
+import sip_models.sip_response as sip_response
 
 
 def _make_list(number_or_list):
@@ -19,8 +19,10 @@ def _make_list(number_or_list):
         return [number_or_list, ]
 
 
-class cc(object):
-
+class cc_base(object):
+    """
+    Base class for Cole-Cole objects (both resistivity and conductivity)
+    """
     def __init__(self, frequencies):
         self.f = frequencies
 
@@ -104,6 +106,9 @@ class cc(object):
         self.otc2 = (self.w * self.tau) ** (2 * self.c)
         self.ang = self.c * np.pi / 2.0  # rad
         self.denom = 1 + 2 * self.otc * np.cos(self.ang) + self.otc2
+
+
+class cc(cc_base):
 
     def response(self, parameters):
         r"""Complex response of the Cole-Cole model::

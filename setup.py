@@ -12,14 +12,6 @@ import sys
 
 version_short = '0.1'
 version_long = '0.1.0'
-# if we are in a git directory, use the last git commit as the version
-cmd = 'git log -1 --format=%H'
-try:
-    if os.path.isdir('.git'):
-        git_output = subprocess.check_output(cmd, shell=True).strip()
-        version_long += '+' + git_output
-except:
-    pass
 
 extra = {}
 if sys.version_info >= (3,):
@@ -39,14 +31,12 @@ if __name__ == '__main__':
           # packages=find_packages(),
           package_dir={'': 'lib'},
           packages=['sip_models', 'sip_models.res' ],
-          # scripts=['src/dd_single/dd_single.py',
-          #          'src/dd_time/dd_time.py',
-          #          'src/dd_space_time/dd_space_time.py',
-          #          'src/dd_test/dd_test.py',
-          #          'src/ddps/ddps.py',
-          #          'src/ddpt/ddpt.py',
-          #          'src/ddpst/ddpst.py',
-          #          'src/ddplot/ddplot.py'],
+          # scripts=[,],
           install_requires=['numpy', 'scipy>=0.12', 'matplotlib'],
+          classifiers=[
+              "Development Status :: 4 - Beta",
+              "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+              "Programming Language :: Python :: 3.4",
+          ],
           **extra
           )

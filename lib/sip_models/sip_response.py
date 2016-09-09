@@ -1,5 +1,6 @@
 # *-* coding: utf-8 *-*
 """
+Define a container for one SIP spectrum. Include converters and plot functions
 
 """
 import sip_formats.convert as SC
