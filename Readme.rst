@@ -1,14 +1,73 @@
 Introduction
 ============
 
-Provide Python classes for the Cole-Cole model, both in resistivities and
-conductivities.
+Provide Python classes for the Cole-Cole model, both in resistivity and
+conductivity formulations.
 
-Planned is also the implementation of derived models such as the Debye
-decomposition or the Warburg model.
+This package is licenced under the GPL-3 licence.
+
+Status
+======
+
+* implemented: sip_models.res.cc
+  This is the resistivity formulation of the Cole-Cole model, including
+  derivatives and Jacobian matrix
+* implemented: sip_models.sip_response
+  Hold one spectrum and return it in various formats
+
+
+Roadmap
+=======
+
+* implement conductivity models
+* unit tests
+* Planned is also the implementation of derived models such as the Debye
+  decomposition or the Warburg model.
 
 Usage
 =====
+
+::
+
+    import numpy as np
+    frequencies = np.logspace(-3, 4, 30)
+
+    import sip_models.res.cc as cc_res
+    cc_obj = cc_res.cc(frequencies)
+
+    cc_paramers = {
+        'rho0': 100,
+        'm': 0.1,
+        'tau': 0.04,
+        'c': 0.6
+    }
+
+    # return an SIP spectrum object
+    response = cc_obj.response(cc_parameters)
+
+    # resistivity magnitude
+    response.rmag
+
+    # resistivity phase
+    response.rpha
+
+    # resistivity real part
+    response.rre
+
+    # resistivity imaginary part
+    response.rim
+
+    # resistivity magnitude and phase
+    response.rmag_rpha
+
+    # for other formats, please look at sip_models.sip_response.py
+
+
+Planned Usage
+=============
+
+These snippets represent the planned usage of this library. When its
+finnished...
 
 ::
 
