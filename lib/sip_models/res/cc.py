@@ -117,7 +117,6 @@ class cc(cc_base):
 
         Parameters
         ----------
-        frequencies: size N array with ascending frequencies
         parameters: Cole-Cole model parameters
 
         Returns
