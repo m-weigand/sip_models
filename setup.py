@@ -25,7 +25,7 @@ if __name__ == '__main__':
           'the Cole-Cole model',
           author='Maximilian Weigand',
           author_email='mweigand@geo.uni-bonn.de',
-          url='http://www.geo.uni-bonn.de/~mweigand',
+          url='https://github.com/m-weigand/sip_models',
           # find_packages() somehow does not work under Win7 when creating a
           # msi # installer
           # packages=find_packages(),
