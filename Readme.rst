@@ -10,9 +10,12 @@ Status
 ======
 
 * implemented: sip_models.res.cc
+
   This is the resistivity formulation of the Cole-Cole model, including
   derivatives and Jacobian matrix
+
 * implemented: sip_models.sip_response
+
   Hold one spectrum and return it in various formats
 
 
