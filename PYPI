@@ -1,0 +1,27 @@
+* create login credentials for pypi.python.org and pypitest.python.org
+* install twine
+* create ~/.pypirc ::
+
+	[distutils]
+	index-servers=
+		pypi
+		pypitest
+
+	[pypitest]
+	repository=https://testpypi.python.org/pypi
+	username=[USER]
+	password=[PASSWORD]
+
+	[pypi]
+	repository=https://pypi.python.org/pypi
+	username=[USER]
+	password=[PASSWORD]
+
+python setup.py register -r https://testpypi.python.org/pypi
+or
+python setup.py register -r https://pypi.python.org/pypi
+
+python setup.py sdist
+cd dist
+sign with pgp: gpg --detach-sign -a sip_models-0.1.0.tar.gz
+twine upload -r pypitest sip_models-0.1.0.tar.gz
