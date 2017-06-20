@@ -27,6 +27,23 @@ Roadmap
 * Planned is also the implementation of derived models such as the Debye
   decomposition or the Warburg model.
 
+Installation
+============
+
+We suggest to run in a virtualenv: ::
+
+    mkvirtualenv --python /usr/bin/python3 sip_models
+    workon sip_models
+    pip install -U pip
+    pip install -U numpy matplotlib scipy pandas shapely
+
+For now you also need to install crtomo_tools from the git-repository
+
+Then install with: ::
+
+    python setup.py install
+
+
 Usage
 =====
 
