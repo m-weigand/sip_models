@@ -5,9 +5,11 @@ Define a container for one SIP spectrum. Include converters and plot functions
 """
 import sip_formats.convert as SC
 import numpy as np
-import matplotlib as mpl
-mpl.rcParams['font.size'] = 8.0
-import pylab as plt
+from crtomo.mpl_setup import *
+# import matplotlib as mpl
+# mpl.rcParams['font.size'] = 8.0
+# import pylab as plt
+# mpl.rcParams['font.size'] = 8.0
 
 
 class sip_response():
@@ -52,10 +54,18 @@ class sip_response():
         self.rre_rim = np.vstack((self.rre, self.rim)).T
         self.cre_cim = np.vstack((self.cre, self.cim)).T
 
+    def to_one_line(self, array):
+        """flatten the array to one dimension using the 'F' (Fortran) style and
+        return a 2D array
+        """
+        return np.atleast_2d(array.flatten(order='F'))
+
     def plot(self, filename):
         """Standard plot of spectrum
         """
-        fig, axes = plt.subplots(2, 2, figsize=(10 / 2.54, 6 / 2.54))
+        fig, axes = plt.subplots(
+            2, 2, figsize=(10 / 2.54, 6 / 2.54), sharex=True
+        )
 
         # resistivity magnitude
         ax = axes[0, 0]
@@ -69,18 +79,22 @@ class sip_response():
 
         # conductivity real part
         ax = axes[1, 0]
-        ax.semilogx(self.frequencies, self.cre, '.-', color='k')
+        ax.loglog(self.frequencies, self.cre, '.-', color='k')
         ax.set_ylabel(r"$\sigma'~[S/m]$")
 
         # conductivity imaginary part
         ax = axes[1, 1]
-        ax.semilogx(self.frequencies, self.cim, '.-', color='k')
+        ax.loglog(self.frequencies, self.cim, '.-', color='k')
         ax.set_ylabel(r"$\sigma''~[S/m]$")
 
-        for ax in axes.flatten():
-            ax.set_xlabel('frequency [Hz]')
+        for ax in axes.flatten()[0:2]:
             ax.xaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
             ax.yaxis.set_major_locator(mpl.ticker.MaxNLocator(5))
+
+        for ax in axes.flatten()[2:]:
+            ax.set_xlabel('frequency [Hz]')
+            ax.xaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
+            ax.yaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
 
         fig.tight_layout()
         fig.savefig(filename, dpi=300)

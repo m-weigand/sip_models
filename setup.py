@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 from setuptools import setup
-import subprocess
-import os
 import sys
 # from setuptools import find_packages
 # find_packages
@@ -30,12 +28,17 @@ if __name__ == '__main__':
           # msi # installer
           # packages=find_packages(),
           package_dir={'': 'lib'},
-          packages=['sip_models', 'sip_models.res' ],
+          packages=[
+              'sip_models',
+              'sip_models.res',
+              'sip_models.cond',
+          ],
           # scripts=[,],
           install_requires=['numpy', 'scipy>=0.12', 'matplotlib'],
           classifiers=[
               "Development Status :: 4 - Beta",
-              "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+              "License :: OSI Approved :: GNU Lesser General " +
+              "Public License v3 (LGPLv3)",
               "Programming Language :: Python :: 3.4",
               "Intended Audience :: Science/Research",
           ],
