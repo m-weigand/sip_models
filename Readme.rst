@@ -43,6 +43,9 @@ Then install with: ::
 
     python setup.py install
 
+For the documentation to build, the following package are also required: ::
+
+    pip install sphinx sphinxcontrib-napoleon
 
 Usage
 =====
