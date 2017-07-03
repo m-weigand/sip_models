@@ -74,8 +74,10 @@ class cc_base(object):
 
         We have multiple input formats:
 
-        1) a list, which contains the linear parameters in the following order:
-            rho0, m1, tau1, c1, m2, tau2, c2, ...
+        1) a list, tuple, or numpy.ndarray, containing the linear parameters
+	   in the following order:
+            for single term: rho0, m1, tau1, c1
+ 	    for multiple termss: rho0, m1, m2, ..., tau1, tau2, ..., c1, c2, ...
 
         2) a dictionary with the entries "rho0", "m", "tau", "c"
 
@@ -117,7 +119,8 @@ class cc(cc_base):
 
         Parameters
         ----------
-        parameters: Cole-Cole model parameters
+        parameters : list or tuple or numpy.ndarray
+		     Cole-Cole model parameters: rho0, m, tau, c
 
         Returns
         -------
