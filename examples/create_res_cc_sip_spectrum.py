@@ -38,11 +38,11 @@ cc_parameters_ex03 = {
 	'tau': 0.04,
 	'c': 0.6
 }
-result2 = ccobj.response(cc_parameters_ex03)
+result3 = ccobj.response(cc_parameters_ex03)
 
 # plot the results and save the results to file
-result2.plot('res_cc_03_plot.png')
-np.savetxt('res_cc_03_data.dat', result.to_one_line(result2.rmag_rpha))
+result3.plot('res_cc_03_plot.png')
+np.savetxt('res_cc_03_data.dat', result.to_one_line(result3.rmag_rpha))
 
 ###############################################
 ## Example 4: Two peaks, different parameter format
@@ -53,8 +53,8 @@ cc_parameters_ex04 = {
 	'tau': (0.4, 0.004),
 	'c': (0.6, 0.6)
 }
-result2 = ccobj.response(cc_parameters_ex04)
+result4 = ccobj.response(cc_parameters_ex04)
 
 # plot the results and save the results to file
-result2.plot('res_cc_04_plot.png')
-np.savetxt('res_cc_04_data.dat', result.to_one_line(result2.rmag_rpha))
+result4.plot('res_cc_04_plot.png')
+np.savetxt('res_cc_04_data.dat', result.to_one_line(result4.rmag_rpha))
