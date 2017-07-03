@@ -50,7 +50,7 @@ class cc_base(object):
 
     def test_sort_parameters(self):
         self._sort_parameters((100, 0.1, 0.04, 0.5))
-        self._sort_parameters((100, 0.1, 0.04, 0.5, 0.2, 0.004, 0.6))
+        self._sort_parameters((100, 0.1, 0.2, 0.04, 0.004, 0.5, 0.6))
 
         self._sort_parameters(
             {'rho0': 100,
