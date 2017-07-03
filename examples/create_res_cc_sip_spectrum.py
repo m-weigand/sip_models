@@ -32,13 +32,13 @@ np.savetxt('res_cc_02_data.dat', result.to_one_line(result2.rmag_rpha))
 ###############################################
 ## Example 3: One peak, different parameter format
 # Format of parameters: dict
-cc_parameters = {
+cc_parameters_ex03 = {
 	'rho0': 100,
 	'm': 0.1,
 	'tau': 0.04,
 	'c': 0.6
 }
-result2 = ccobj.response(cc_parameters)
+result2 = ccobj.response(cc_parameters_ex03)
 
 # plot the results and save the results to file
 result2.plot('res_cc_03_plot.png')
@@ -47,13 +47,13 @@ np.savetxt('res_cc_03_data.dat', result.to_one_line(result2.rmag_rpha))
 ###############################################
 ## Example 4: Two peaks, different parameter format
 # Format of parameters: dict
-cc_parameters = {
+cc_parameters_ex04 = {
 	'rho0': 100,
 	'm': (0.1, 0.1),
 	'tau': (0.4, 0.004),
 	'c': (0.6, 0.6)
 }
-result2 = ccobj.response(cc_parameters)
+result2 = ccobj.response(cc_parameters_ex04)
 
 # plot the results and save the results to file
 result2.plot('res_cc_04_plot.png')
