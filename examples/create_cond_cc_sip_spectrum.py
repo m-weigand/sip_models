@@ -13,7 +13,7 @@ np.savetxt('cond_cc_frequencies.dat', frequencies)
 ###############################################
 ## Example 1
 # Create the SIP-spectrum for a given parameterset and the given frequency range
-# Order of parameters: rho0, m1, tau1, c1
+# Order of parameters: sigmai, m1, tau1, c1
 result = ccobj.response([0.01, 0.1, 0.04, 0.6])
 
 # plot the results and save the results to file
@@ -22,7 +22,7 @@ np.savetxt('cond_cc_01_data.dat', result.to_one_line(result.cmag_cpha))
 
 ###############################################
 ## Example 2: with two peaks
-# Order of parameters: rho0 m1 m2 tau1 tau2 c1 c2
+# Order of parameters: sigmai, m1, m2, tau1, tau2, c1, c2
 result2 = ccobj.response([0.01, 0.1, 0.2, 0.04, 0.0001, 0.4, 0.8])
 
 # plot the results and save the results to file
