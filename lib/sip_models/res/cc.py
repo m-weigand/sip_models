@@ -160,8 +160,8 @@ class cc(cc_base):
         (\omega \tau)^c cos(\frac{c \pi}{2}) + (\omega \tau)^{2 c}}`
         """
         self._set_parameters(pars)
-        nominator = self.m * self.otc * (np.cos(self.ang) + self.otc)
-        term = nominator / self.denom
+        numerator = self.m * self.otc * (np.cos(self.ang) + self.otc)
+        term = numerator / self.denom
         specs = np.sum(term, axis=1)
 
         result = 1 - specs
@@ -180,8 +180,8 @@ class cc(cc_base):
         (\omega \tau)^c cos(\frac{c \pi}{2}) + (\omega \tau)^{2 c}}`
         """
         self._set_parameters(pars)
-        nominator = -self.otc * (np.cos(self.ang) + self.otc)
-        result = nominator / self.denom
+        numerator = -self.otc * (np.cos(self.ang) + self.otc)
+        result = numerator / self.denom
         result *= self.rho0
         return result
 
@@ -284,8 +284,8 @@ class cc(cc_base):
         cos(\frac{c \pi}{2}) + (\omega \tau)^{2 c}}`
         """
         self._set_parameters(pars)
-        nominator = -self.otc * np.sin(self.ang)
-        result = nominator / self.denom
+        numerator = -self.otc * np.sin(self.ang)
+        result = numerator / self.denom
         result *= self.rho0
         return result
 
