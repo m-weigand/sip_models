@@ -83,10 +83,12 @@ class cc_base(object):
         self.c = c_resized
 
         # compute some common terms
-        #self.otc = (self.w * self.tau) ** self.c
-        #self.otc2 = (self.w * self.tau) ** (2 * self.c)
-        #self.ang = self.c * np.pi / 2.0  # rad
-        #self.denom = 1 + 2 * self.otc * np.cos(self.ang) + self.otc2
+        self.otc = (self.w * self.tau) ** self.c
+        self.otc1 = (self.w * self.tau) ** (self.c - 1)
+        self.otc2 = (self.w * self.tau) ** (2 * self.c)
+        self.ang = self.c * np.pi / 2.0  # rad
+        self.num = 1 + self.otc * np.cos(self.ang)  # numerator
+        self.denom = 1 + 2 * self.otc * np.cos(self.ang) + self.otc2 # denominator
 
 
 class cc(cc_base):
@@ -115,3 +117,56 @@ class cc(cc_base):
         response = sip_response.sip_response(self.f, ccomplex=ccomplex)
         
         return response
+        
+    def dre_dsigmai(self,pars):
+        r"""
+        :math:Add formula
+        """
+        self._set_parameters(pars)
+        terms = self.m * self.num / self.denom
+        specs = np.sum(terms, axis=1)
+        result = 1 - specs 
+        
+        return result
+        
+    def dre_dm(self,pars):
+        r"""
+        :math:Add formula
+        """
+        self._set_parameters(pars)
+        terms = self.m * self.num / self.denom
+        result = - self.sigmai * terms
+        
+        return result
+        
+    def dre_dtau(self,pars):
+        r"""
+        :math:Add formula
+        """
+        self._set_parameters(pars)
+        # term 1
+        num1 = self.c * self.w * self.otc1 * np.cos(self.ang)
+        term1 = num1/self.denom
+        
+        # term 2
+        num2a = self.otc * np.cos(self.ang)
+        num2b = 1 + num2a
+        denom2 = self.denom ** (2 * self.c)
+        term2 = num2b / denom2
+        
+        # term 3
+        term3 = 2 *  self.c * self.w * self.otc1 * np.cos(self.ang) + self.otc2
+        
+        result = self.sigmai * self.m * (term1 + term2 * term3) 
+        
+        return result
+        
+    def dre_dc(self,pars):
+        r"""
+        :math:Add formula
+        """
+        self._set_parameters(pars)
+        
+        result = 
+        
+        return result
