@@ -81,6 +81,7 @@ class cc_base(object):
         self.m = m_resized
         self.tau = tau_resized
         self.c = c_resized
+        self.sigma0 = (1 - self.m) * self.sigmai
 
         # compute some common terms
         self.otc = (self.w * self.tau) ** self.c
@@ -151,7 +152,7 @@ class cc(cc_base):
         # term 2
         num2a = self.otc * np.cos(self.ang)
         num2b = 1 + num2a
-        denom2 = self.denom ** (2 * self.c)
+        denom2 = self.denom ** 2
         term2 = num2b / denom2
         
         # term 3
@@ -166,7 +167,109 @@ class cc(cc_base):
         :math:Add formula
         """
         self._set_parameters(pars)
+        # term 1
+        num1a = np.log(self.w * self.tau) * self.otc * np.sin(self.ang)
+        num1b = self.otc * np.cos(self.ang) * np.pi / 2.0
+        term1 = (num1a + num1b) / self.denom
         
-        result = 
+        # term 2
+        num2 = self.otc * np.sin(self.c / np.pi) * 2
+        denom2 = self.denom ** 2
+        term2 = num2 / denom2
+        
+        # term 3
+        num3a = 2 * np.log(self.w * self.tau) * self.otc * np.cos(self.ang)
+        num3b = 2 * ((self.w * self.tau) ** 2) * np.pi / 2.0 * np.sin(self.ang)
+        num3c = 2 * np.log(self.w * self.tau) * self.otc2
+        term3 = num3a - num3b + num3c
+        
+        result = self.sigmai * self.m * (term1 + term2 * term3)
         
         return result
+        
+    def dim_dsigmai(self,pars):
+        r"""
+        :math:Add formula
+        """
+        self._set_parameters(pars)
+        num1 = self.m * self.otc * np.sin(self.ang)
+        result = -num1 / self.denom
+        
+        return result
+        
+    def dim_dm(self,pars):
+        r"""
+        :math:Add formula
+        """
+        self._set_parameters(pars)
+        num1 = self.m * self.otc * np.sin(self.ang)
+        result = -self.sigmai * num1 / self.denom
+        
+        return result
+        
+    def dim_dtau(self,pars):
+        r"""
+        :math:Add formula
+        """ 
+        self._set_parameters(pars)
+        # term 1
+        num1 = -self.m * (self.w ** self.c) * self.c * (self.tau **\
+            (self.c - 1)) * np.sin(self.ang)
+        term1 = self.sigmai * num1 / self.denom
+        
+        # term 2
+        num2a = -self.m * self.otc * np.sin(self.ang)
+        num2b = 2 * (self.w ** 2.0) * self.c * (self.tau ** (self.c - 1)) *\
+            np.cos(self.ang)
+        num2c = 2 * self.c * (self.w ** (self.c * 2)) * (self.tau **\
+            (2 * self.c - 1))
+        term2 = self.sigma0 * num2a * (num2b + num2c) / (self.denom ** 2)
+        
+        result = term1 + term2
+                 
+        return result
+        
+    def dim_dc(self,pars):
+        r"""
+        :math:Add formula
+        """ 
+        self._set_parameters(pars)
+        # term 1
+        num1a = self.m * np.sin(self.ang) * np.log(self.w * self.tau) * self.otc
+        num1b = self.m * self.otc * np.pi / 2 * np.cos(np.pi / 2)
+        term1 = self.sigma0 * (-num1a - num1b) / self.denom
+        
+        #term 2
+        num2a = -self.m * self.otc * np.cos(self.ang)
+        num2b = -2 * np.log(self.w * self.tau) * self.otc * np.cos(self.ang) 
+        num2c = 2 * self.otc * np.pi / 2 * np.cos(self.ang)
+        num2d = 2 * np.log(self.w * self.tau) * self.otc2
+        numerator = num2a * (num2b + num2c ) + num2d
+        term2 = self.sigma0 * numerator / (self.denom ** 2)
+        
+        result = term1 + term2
+        
+        return result
+
+    def test_derivatives(self):
+        parameters = {
+            'sigmai': 0.01,
+            'm': 0.1,
+            'tau': 0.04,
+            'c': 0.8
+        }
+        # parameters = {
+        #     'sigmai': 0.01,
+        #     'm': (0.15, 0.2),
+        #     'tau': (0.4, 0.004),
+        #     'c': (0.5, 0.8),
+        # }
+        print(self.dre_dsigmai(parameters))
+        print(self.dre_dm(parameters))
+        print(self.dre_dtau(parameters))
+        print(self.dre_dc(parameters))
+
+        print(self.dim_dsigmai(parameters))
+        print(self.dim_dm(parameters))
+        print(self.dim_dtau(parameters))
+        print(self.dim_dc(parameters))        
