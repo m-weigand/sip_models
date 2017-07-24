@@ -60,7 +60,7 @@ class sip_response():
         """
         return np.atleast_2d(array.flatten(order='F'))
 
-    def plot(self, filename):
+    def plot(self, filename, reciprocal=None):
         """Standard plot of spectrum
         """
         fig, axes = plt.subplots(
@@ -86,6 +86,36 @@ class sip_response():
         ax = axes[1, 1]
         ax.loglog(self.frequencies, self.cim, '.-', color='k')
         ax.set_ylabel(r"$\sigma''~[S/m]$")
+
+        if reciprocal is not None:
+            axes[0, 0].semilogx(
+                reciprocal.frequencies,
+                reciprocal.rmag,
+                '.-',
+                color='k',
+                linestyle='dashed',
+            )
+            axes[0, 1].semilogx(
+                reciprocal.frequencies,
+                -reciprocal.rpha,
+                '.-',
+                color='k',
+                linestyle='dashed',
+            )
+            axes[1, 0].loglog(
+                reciprocal.frequencies,
+                reciprocal.cre,
+                '.-',
+                color='k',
+                linestyle='dashed',
+            )
+            axes[1, 1].loglog(
+                reciprocal.frequencies,
+                reciprocal.cim,
+                '.-',
+                color='k',
+                linestyle='dashed',
+            )
 
         for ax in axes.flatten()[0:2]:
             ax.xaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
