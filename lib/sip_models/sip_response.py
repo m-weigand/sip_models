@@ -61,12 +61,14 @@ class sip_response():
         """
         return np.atleast_2d(array.flatten(order='F'))
 
-    def _plot(self, reciprocal=None, limits=None):
+    def _plot(self, title=None, reciprocal=None, limits=None):
         """Standard plot of spectrum
         """
         fig, axes = plt.subplots(
             2, 2, figsize=(10 / 2.54, 6 / 2.54), sharex=True
         )
+        if title is not None:
+            fig.suptitle(title)
 
         # resistivity magnitude
         ax = axes[0, 0]
@@ -163,9 +165,9 @@ class sip_response():
 
         return fig, axes
 
-    def plot(self, filename, reciprocal=None, limits=None):
+    def plot(self, filename, title=None, reciprocal=None, limits=None):
         """Standard plot of spectrum
         """
-        fig, axes = self._plot(reciprocal, limits=limits)
+        fig, axes = self._plot(reciprocal, limits=limits, title=title)
         fig.savefig(filename, dpi=300)
         plt.close(fig)
