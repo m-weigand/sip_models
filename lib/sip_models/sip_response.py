@@ -70,7 +70,10 @@ class sip_response():
 
         # resistivity magnitude
         ax = axes[0, 0]
-        ax.semilogx(self.frequencies, self.rmag, '.-', color='k')
+        ax.semilogx(
+            self.frequencies, self.rmag, '.-', color='k',
+            label='normal',
+        )
         ax.set_ylabel(r'$|\rho|~[\Omega m]$')
         ax.set_ylim(
             limits.get('rmag_min', None),
@@ -106,6 +109,7 @@ class sip_response():
             limits.get('cim_max', None)
         )
 
+        fig.tight_layout()
         if reciprocal is not None:
             axes[0, 0].semilogx(
                 reciprocal.frequencies,
@@ -113,6 +117,7 @@ class sip_response():
                 '.-',
                 color='k',
                 linestyle='dashed',
+                label='reciprocal',
             )
             axes[0, 1].semilogx(
                 reciprocal.frequencies,
@@ -136,6 +141,17 @@ class sip_response():
                 linestyle='dashed',
             )
 
+            fig.subplots_adjust(
+                bottom=0.2,
+            )
+
+            axes[0, 0].legend(
+                loc="lower center",
+                ncol=4,
+                bbox_to_anchor=(0, 0, 1, 1),
+                bbox_transform=fig.transFigure
+            )
+
         for ax in axes.flatten()[0:2]:
             ax.xaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
             ax.yaxis.set_major_locator(mpl.ticker.MaxNLocator(5))
@@ -145,7 +161,6 @@ class sip_response():
             ax.xaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
             ax.yaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
 
-        fig.tight_layout()
         return fig, axes
 
     def plot(self, filename, reciprocal=None, limits=None):
