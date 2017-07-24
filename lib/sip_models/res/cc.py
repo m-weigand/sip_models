@@ -50,7 +50,7 @@ class cc_base(object):
 
     def test_sort_parameters(self):
         self._sort_parameters((100, 0.1, 0.04, 0.5))
-        self._sort_parameters((100, 0.1, 0.04, 0.5, 0.2, 0.004, 0.6))
+        self._sort_parameters((100, 0.1, 0.2, 0.04, 0.004, 0.5, 0.6))
 
         self._sort_parameters(
             {'rho0': 100,
@@ -74,8 +74,10 @@ class cc_base(object):
 
         We have multiple input formats:
 
-        1) a list, which contains the linear parameters in the following order:
-            rho0, m1, tau1, c1, m2, tau2, c2, ...
+        1) a list, tuple, or numpy.ndarray, containing the linear parameters
+	   in the following order:
+            for single term: rho0, m1, tau1, c1
+ 	    for multiple termss: rho0, m1, m2, ..., tau1, tau2, ..., c1, c2, ...
 
         2) a dictionary with the entries "rho0", "m", "tau", "c"
 
@@ -117,7 +119,8 @@ class cc(cc_base):
 
         Parameters
         ----------
-        parameters: Cole-Cole model parameters
+        parameters : list or tuple or numpy.ndarray
+		     Cole-Cole model parameters: rho0, m, tau, c
 
         Returns
         -------
@@ -157,8 +160,8 @@ class cc(cc_base):
         (\omega \tau)^c cos(\frac{c \pi}{2}) + (\omega \tau)^{2 c}}`
         """
         self._set_parameters(pars)
-        nominator = self.m * self.otc * (np.cos(self.ang) + self.otc)
-        term = nominator / self.denom
+        numerator = self.m * self.otc * (np.cos(self.ang) + self.otc)
+        term = numerator / self.denom
         specs = np.sum(term, axis=1)
 
         result = 1 - specs
@@ -177,8 +180,8 @@ class cc(cc_base):
         (\omega \tau)^c cos(\frac{c \pi}{2}) + (\omega \tau)^{2 c}}`
         """
         self._set_parameters(pars)
-        nominator = -self.otc * (np.cos(self.ang) + self.otc)
-        result = nominator / self.denom
+        numerator = -self.otc * (np.cos(self.ang) + self.otc)
+        result = numerator / self.denom
         result *= self.rho0
         return result
 
@@ -281,8 +284,8 @@ class cc(cc_base):
         cos(\frac{c \pi}{2}) + (\omega \tau)^{2 c}}`
         """
         self._set_parameters(pars)
-        nominator = -self.otc * np.sin(self.ang)
-        result = nominator / self.denom
+        numerator = -self.otc * np.sin(self.ang)
+        result = numerator / self.denom
         result *= self.rho0
         return result
 

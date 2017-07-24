@@ -5,7 +5,8 @@ Define a container for one SIP spectrum. Include converters and plot functions
 """
 import sip_formats.convert as SC
 import numpy as np
-from crtomo.mpl_setup import *
+import crtomo.mpl
+plt, mpl = crtomo.mpl.setup()
 # import matplotlib as mpl
 # mpl.rcParams['font.size'] = 8.0
 # import pylab as plt
@@ -19,9 +20,9 @@ class sip_response():
     """
     def __init__(self, frequencies, rcomplex=None, ccomplex=None):
         if rcomplex is None and ccomplex is None:
-            raise Exception('One initialisation array is required!')
+            raise Exception('One initialization array is allowed!')
         if rcomplex is not None and ccomplex is not None:
-            raise Exception('Only one initialisation array is required!')
+            raise Exception('Only one initialization array is allowed!')
 
         self.frequencies = frequencies
 
@@ -60,7 +61,7 @@ class sip_response():
         """
         return np.atleast_2d(array.flatten(order='F'))
 
-    def plot(self, filename, reciprocal=None):
+    def _plot(self, reciprocal=None, limits=None):
         """Standard plot of spectrum
         """
         fig, axes = plt.subplots(
@@ -71,21 +72,39 @@ class sip_response():
         ax = axes[0, 0]
         ax.semilogx(self.frequencies, self.rmag, '.-', color='k')
         ax.set_ylabel(r'$|\rho|~[\Omega m]$')
+        ax.set_ylim(
+            limits.get('rmag_min', None),
+            limits.get('rmag_max', None)
+        )
 
         # resistivity phase
         ax = axes[0, 1]
         ax.semilogx(self.frequencies, -self.rpha, '.-', color='k')
         ax.set_ylabel(r'$-\phi~[mrad]$')
+        # note the switch of _min/_max because we change the sign while
+        # plotting
+        ax.set_ylim(
+            -limits.get('rpha_max', None),
+            -limits.get('rpha_min', None)
+        )
 
         # conductivity real part
         ax = axes[1, 0]
         ax.loglog(self.frequencies, self.cre, '.-', color='k')
         ax.set_ylabel(r"$\sigma'~[S/m]$")
+        ax.set_ylim(
+            limits.get('cre_min', None),
+            limits.get('cre_max', None)
+        )
 
         # conductivity imaginary part
         ax = axes[1, 1]
         ax.loglog(self.frequencies, self.cim, '.-', color='k')
         ax.set_ylabel(r"$\sigma''~[S/m]$")
+        ax.set_ylim(
+            limits.get('cim_min', None),
+            limits.get('cim_max', None)
+        )
 
         if reciprocal is not None:
             axes[0, 0].semilogx(
@@ -127,5 +146,11 @@ class sip_response():
             ax.yaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
 
         fig.tight_layout()
+        return fig, axes
+
+    def plot(self, filename, reciprocal=None, limits=None):
+        """Standard plot of spectrum
+        """
+        fig, axes = self._plot(reciprocal, limits=limits)
         fig.savefig(filename, dpi=300)
         plt.close(fig)
