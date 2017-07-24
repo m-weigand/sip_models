@@ -7,10 +7,6 @@ import sip_formats.convert as SC
 import numpy as np
 import crtomo.mpl
 plt, mpl = crtomo.mpl.setup()
-# import matplotlib as mpl
-# mpl.rcParams['font.size'] = 8.0
-# import pylab as plt
-# mpl.rcParams['font.size'] = 8.0
 
 
 class sip_response():
@@ -144,7 +140,7 @@ class sip_response():
             )
 
             fig.subplots_adjust(
-                bottom=0.2,
+                bottom=0.4,
             )
 
             axes[0, 0].legend(
