@@ -140,7 +140,7 @@ class sip_response():
             )
 
             fig.subplots_adjust(
-                bottom=0.4,
+                bottom=0.3,
             )
 
             axes[0, 0].legend(
