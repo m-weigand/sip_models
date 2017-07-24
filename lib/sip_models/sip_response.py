@@ -168,6 +168,10 @@ class sip_response():
     def plot(self, filename, title=None, reciprocal=None, limits=None):
         """Standard plot of spectrum
         """
-        fig, axes = self._plot(reciprocal, limits=limits, title=title)
+        fig, axes = self._plot(
+            reciprocal=reciprocal,
+            limits=limits,
+            title=title,
+        )
         fig.savefig(filename, dpi=300)
         plt.close(fig)
