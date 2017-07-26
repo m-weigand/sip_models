@@ -57,6 +57,23 @@ class sip_response():
         """
         return np.atleast_2d(array.flatten(order='F'))
 
+    def _add_labels(self, axes):
+        """Given a 2x2 array of axes, add x and y labels
+        """
+        ax = axes[0, 0]
+        ax.set_ylabel(r'$|\rho|~[\Omega m]$')
+
+        ax = axes[0, 1]
+        ax.set_ylabel(r'$-\phi~[mrad]$')
+
+        ax = axes[1, 0]
+        ax.set_xlabel('frequency [Hz]')
+        ax.set_ylabel(r"$\sigma'~[S/m]$")
+
+        ax = axes[1, 1]
+        ax.set_xlabel('frequency [Hz]')
+        ax.set_ylabel(r"$\sigma''~[S/m]$")
+
     def _plot(self, title=None, reciprocal=None, limits=None):
         """Standard plot of spectrum
         """
