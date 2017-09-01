@@ -84,6 +84,9 @@ class sip_response():
             fig.suptitle(title)
 
         # resistivity magnitude
+        if limits is None:
+            limits = {}
+
         ax = axes[0, 0]
         ax.semilogx(
             self.frequencies, self.rmag, '.-', color='k',
@@ -101,10 +104,10 @@ class sip_response():
         ax.set_ylabel(r'$-\phi~[mrad]$')
         # note the switch of _min/_max because we change the sign while
         # plotting
-        ax.set_ylim(
-            -limits.get('rpha_max', None),
-            -limits.get('rpha_min', None)
-        )
+        #ax.set_ylim(
+        #    -limits.get('rpha_max', None),
+        #    -limits.get('rpha_min', None)
+        #)
 
         # conductivity real part
         ax = axes[1, 0]
