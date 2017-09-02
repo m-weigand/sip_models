@@ -57,24 +57,26 @@ class sip_response():
         """
         return np.atleast_2d(array.flatten(order='F'))
 
-    def _add_labels(self, axes):
+    def _add_labels(self, axes, dtype):
         """Given a 2x2 array of axes, add x and y labels
         """
-        ax = axes[0, 0]
-        ax.set_ylabel(r'$|\rho|~[\Omega m]$')
+        for ax in axes[1, :].flat:
+            ax.set_xlabel('frequency [Hz]')
 
-        ax = axes[0, 1]
-        ax.set_ylabel(r'$-\phi~[mrad]$')
+        if dtype == 'rho':
+            axes[0, 0].set_ylabel(r'$|\rho|~[\Omega m]$')
+            axes[0, 1].set_ylabel(r'$-\phi~[mrad]$')
+            axes[1, 0].set_ylabel(r"$\sigma'~[S/m]$")
+            axes[1, 1].set_ylabel(r"$\sigma''~[S/m]$")
+        elif dtype == 'R':
+            axes[0, 0].set_ylabel(r'$|R|~[\Omega]$')
+            axes[0, 1].set_ylabel(r'$-\phi~[mrad]$')
+            axes[1, 0].set_ylabel(r"$Y'~[S]$")
+            axes[1, 1].set_ylabel(r"$Y''~[S]$")
+        else:
+            raise Exception('dtype not known')
 
-        ax = axes[1, 0]
-        ax.set_xlabel('frequency [Hz]')
-        ax.set_ylabel(r"$\sigma'~[S/m]$")
-
-        ax = axes[1, 1]
-        ax.set_xlabel('frequency [Hz]')
-        ax.set_ylabel(r"$\sigma''~[S/m]$")
-
-    def _plot(self, title=None, reciprocal=None, limits=None):
+    def _plot(self, title=None, reciprocal=None, limits=None, dtype='rho'):
         """Standard plot of spectrum
 
         Parameters
@@ -86,7 +88,9 @@ class sip_response():
         limits: dict|None, optional
             used to set ylimits of the plots. Possible entries: rmag_min,
             rmag_max, rpha_min, rpha_max, cre_min, cre_max, cim_min, cim_max
-
+        dtype: string, optional
+            Possible values: [rho|R]. Determines the label types. 'rho':
+                resistivity/conductivity, 'R': resistance/conductance
 
         Returns
         -------
@@ -110,7 +114,6 @@ class sip_response():
             self.frequencies, self.rmag, '.-', color='k',
             label='normal',
         )
-        ax.set_ylabel(r'$|\rho|~[\Omega m]$')
         ax.set_ylim(
             limits.get('rmag_min', None),
             limits.get('rmag_max', None)
@@ -119,7 +122,6 @@ class sip_response():
         # resistivity phase
         ax = axes[0, 1]
         ax.semilogx(self.frequencies, -self.rpha, '.-', color='k')
-        ax.set_ylabel(r'$-\phi~[mrad]$')
         # note the switch of _min/_max because we change the sign while
         # plotting
         ymin = limits.get('rpha_max', None)
@@ -136,7 +138,6 @@ class sip_response():
         # conductivity real part
         ax = axes[1, 0]
         ax.loglog(self.frequencies, self.cre, '.-', color='k')
-        ax.set_ylabel(r"$\sigma'~[S/m]$")
         ax.set_ylim(
             limits.get('cre_min', None),
             limits.get('cre_max', None)
@@ -145,13 +146,23 @@ class sip_response():
         # conductivity imaginary part
         ax = axes[1, 1]
         ax.loglog(self.frequencies, self.cim, '.-', color='k')
-        ax.set_ylabel(r"$\sigma''~[S/m]$")
         ax.set_ylim(
             limits.get('cim_min', None),
             limits.get('cim_max', None)
         )
 
+        self._add_labels(axes, dtype)
+
+        for ax in axes.flatten()[0:2]:
+            ax.xaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
+            ax.yaxis.set_major_locator(mpl.ticker.MaxNLocator(5))
+
+        for ax in axes.flatten()[2:]:
+            ax.xaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
+            ax.yaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
+
         fig.tight_layout()
+        # plot reciprocal spectrum
         if reciprocal is not None:
             axes[0, 0].semilogx(
                 reciprocal.frequencies,
@@ -191,27 +202,21 @@ class sip_response():
                 loc="lower center",
                 ncol=4,
                 bbox_to_anchor=(0, 0, 1, 1),
-                bbox_transform=fig.transFigure
+                bbox_transform=fig.transFigure,
+                fontsize=7.0,
             )
-
-        for ax in axes.flatten()[0:2]:
-            ax.xaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
-            ax.yaxis.set_major_locator(mpl.ticker.MaxNLocator(5))
-
-        for ax in axes.flatten()[2:]:
-            ax.set_xlabel('frequency [Hz]')
-            ax.xaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
-            ax.yaxis.set_major_locator(mpl.ticker.LogLocator(numticks=5))
 
         return fig, axes
 
-    def plot(self, filename, title=None, reciprocal=None, limits=None):
+    def plot(self, filename, title=None, reciprocal=None, limits=None,
+             dtype='rho'):
         """Standard plot of spectrum
         """
         fig, axes = self._plot(
             reciprocal=reciprocal,
             limits=limits,
             title=title,
+            dtype=dtype,
         )
         fig.savefig(filename, dpi=300)
         plt.close(fig)
