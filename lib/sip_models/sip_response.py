@@ -76,7 +76,28 @@ class sip_response():
 
     def _plot(self, title=None, reciprocal=None, limits=None):
         """Standard plot of spectrum
+
+        Parameters
+        ----------
+        title: string|None, optional
+            Title of plot
+        reciprocal: sip_response object|None, optional
+            If provided, plot this spectrum with another color
+        limits: dict|None, optional
+            used to set ylimits of the plots. Possible entries: rmag_min,
+            rmag_max, rpha_min, rpha_max, cre_min, cre_max, cim_min, cim_max
+
+
+        Returns
+        -------
+        fig: figure object
+            the generated matplotlib figure
+        axes: list
+            matplotlib axes objects
         """
+        if limits is None:
+            limits = {}
+
         fig, axes = plt.subplots(
             2, 2, figsize=(10 / 2.54, 6 / 2.54), sharex=True
         )
@@ -101,9 +122,15 @@ class sip_response():
         ax.set_ylabel(r'$-\phi~[mrad]$')
         # note the switch of _min/_max because we change the sign while
         # plotting
+        ymin = limits.get('rpha_max', None)
+        if ymin is not None:
+            ymin *= -1
+        ymax = limits.get('rpha_min', None)
+        if ymax is not None:
+            ymax *= -1
         ax.set_ylim(
-            -limits.get('rpha_max', None),
-            -limits.get('rpha_min', None)
+            ymin,
+            ymax,
         )
 
         # conductivity real part
