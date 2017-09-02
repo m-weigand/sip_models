@@ -105,6 +105,9 @@ class sip_response():
             fig.suptitle(title)
 
         # resistivity magnitude
+        if limits is None:
+            limits = {}
+
         ax = axes[0, 0]
         ax.semilogx(
             self.frequencies, self.rmag, '.-', color='k',
