@@ -7,7 +7,7 @@ Welcome to sip_models's documentation!
 ======================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
    api/modules.rst
