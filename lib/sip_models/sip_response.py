@@ -5,8 +5,8 @@ functions
 """
 import sip_formats.convert as SC
 import numpy as np
-import crtomo.mpl
-plt, mpl = crtomo.mpl.setup()
+import sip_models.plot_helper
+plt, mpl = sip_models.plot_helper.setup()
 
 
 class sip_response():
