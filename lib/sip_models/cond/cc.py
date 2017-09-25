@@ -130,6 +130,12 @@ class cc(cc_base):
         
         return result
         
+    def dre_dlog10sigmai(self,pars):
+        # first call the linear response to set the parameters
+        linear_response = self.dre_dsigmai(pars)
+        result = np.log(10) * self.sigmai * linear_response    
+        return result        
+        
     def dre_dm(self,pars):
         r"""
         :math:Add formula
@@ -138,6 +144,12 @@ class cc(cc_base):
         terms = self.m * self.num / self.denom
         result = - self.sigmai * terms
         
+        return result
+        
+    def dre_dlog10m(self, pars):
+        # first call the linear response to set the parameters
+        lin_response = self.dre_dm(pars)
+        result = np.log(10) * self.m * lin_response
         return result
         
     def dre_dtau(self,pars):
@@ -160,6 +172,12 @@ class cc(cc_base):
         
         result = self.sigmai * self.m * (term1 + term2 * term3) 
         
+        return result
+        
+    def dre_dlog10tau(self, pars):
+        # first call the linear response to set the parameters
+        lin_response = self.dre_dtau(pars)
+        result = np.log(10) * self.tau * lin_response
         return result
         
     def dre_dc(self,pars):
@@ -186,6 +204,7 @@ class cc(cc_base):
         result = self.sigmai * self.m * (term1 + term2 * term3)
         
         return result
+       
         
     def dim_dsigmai(self,pars):
         r"""
@@ -197,6 +216,12 @@ class cc(cc_base):
         
         return result
         
+    def dim_dlog10sigmai(self, pars):
+        # first call the linear response to set the parameters
+        lin_response = self.dim_dsigmai(pars)
+        result = np.log(10) * self.sigmai * lin_response
+        return result    
+        
     def dim_dm(self,pars):
         r"""
         :math:Add formula
@@ -206,6 +231,12 @@ class cc(cc_base):
         result = -self.sigmai * num1 / self.denom
         
         return result
+        
+    def dim_dlog10m(self, pars):
+        # first call the linear response to set the parameters
+        lin_response = self.dim_dm(pars)
+        result = np.log(10) * self.m * lin_response
+        return result    
         
     def dim_dtau(self,pars):
         r"""
@@ -228,6 +259,12 @@ class cc(cc_base):
         result = term1 + term2
                  
         return result
+        
+    def dim_dlog10tau(self, pars):
+        # first call the linear response to set the parameters
+        lin_resp = self.dim_dtau(pars)
+        result = np.log(10) * self.tau * lin_resp
+        return result        
         
     def dim_dc(self,pars):
         r"""
