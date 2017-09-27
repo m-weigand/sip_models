@@ -9,12 +9,14 @@ doi: 10.1093/gji/ggt251
 import numpy as np
 import sip_models.sip_response as sip_response
 
+
 def _make_list(number_or_list):
     # return the object enclosed in a list if its not a tuple or list
     if isinstance(number_or_list, (tuple, list)):
         return number_or_list
     else:
         return [number_or_list, ]
+
 
 class cc_base(object):
     """
@@ -44,7 +46,6 @@ class cc_base(object):
             raise Exception('Input format not recognized')
 
         return sigmai, m, tau, c
-
 
     def _set_parameters(self, parameters):
         """Sort out the various possible parameter inputs and return a config
@@ -88,8 +89,9 @@ class cc_base(object):
         self.otc1 = (self.w * self.tau) ** (self.c - 1)
         self.otc2 = (self.w * self.tau) ** (2 * self.c)
         self.ang = self.c * np.pi / 2.0  # rad
-        self.num = 1 + self.otc * np.cos(self.ang)  # numerator
-        self.denom = 1 + 2 * self.otc * np.cos(self.ang) + self.otc2 # denominator
+        # numerator and denominator
+        self.num = 1 + self.otc * np.cos(self.ang)
+        self.denom = 1 + 2 * self.otc * np.cos(self.ang) + self.otc2
 
 
 class cc(cc_base):
@@ -116,43 +118,43 @@ class cc(cc_base):
         ccomplex = self.sigmai * (1 - specs)
 
         response = sip_response.sip_response(self.f, ccomplex=ccomplex)
-        
+
         return response
-        
-    def dre_dsigmai(self,pars):
+
+    def dre_dsigmai(self, pars):
         r"""
         :math:Add formula
         """
         self._set_parameters(pars)
         terms = self.m * self.num / self.denom
         specs = np.sum(terms, axis=1)
-        result = 1 - specs 
-        
+        result = 1 - specs
+
         return result
-        
-    def dre_dlog10sigmai(self,pars):
+
+    def dre_dlog10sigmai(self, pars):
         # first call the linear response to set the parameters
         linear_response = self.dre_dsigmai(pars)
-        result = np.log(10) * self.sigmai * linear_response    
-        return result        
-        
-    def dre_dm(self,pars):
+        result = np.log(10) * self.sigmai * linear_response
+        return result
+
+    def dre_dm(self, pars):
         r"""
         :math:Add formula
         """
         self._set_parameters(pars)
         terms = self.m * self.num / self.denom
         result = - self.sigmai * terms
-        
+
         return result
-        
+
     def dre_dlog10m(self, pars):
         # first call the linear response to set the parameters
         lin_response = self.dre_dm(pars)
         result = np.log(10) * self.m * lin_response
         return result
-        
-    def dre_dtau(self,pars):
+
+    def dre_dtau(self, pars):
         r"""
         :math:Add formula
         """
@@ -160,27 +162,27 @@ class cc(cc_base):
         # term 1
         num1 = self.c * self.w * self.otc1 * np.cos(self.ang)
         term1 = num1/self.denom
-        
+
         # term 2
         num2a = self.otc * np.cos(self.ang)
         num2b = 1 + num2a
         denom2 = self.denom ** 2
         term2 = num2b / denom2
-        
+
         # term 3
-        term3 = 2 *  self.c * self.w * self.otc1 * np.cos(self.ang) + self.otc2
-        
-        result = self.sigmai * self.m * (term1 + term2 * term3) 
-        
+        term3 = 2 * self.c * self.w * self.otc1 * np.cos(self.ang) + self.otc2
+
+        result = self.sigmai * self.m * (term1 + term2 * term3)
+
         return result
-        
+
     def dre_dlog10tau(self, pars):
         # first call the linear response to set the parameters
         lin_response = self.dre_dtau(pars)
         result = np.log(10) * self.tau * lin_response
         return result
-        
-    def dre_dc(self,pars):
+
+    def dre_dc(self, pars):
         r"""
         :math:Add formula
         """
@@ -189,103 +191,103 @@ class cc(cc_base):
         num1a = np.log(self.w * self.tau) * self.otc * np.sin(self.ang)
         num1b = self.otc * np.cos(self.ang) * np.pi / 2.0
         term1 = (num1a + num1b) / self.denom
-        
+
         # term 2
         num2 = self.otc * np.sin(self.c / np.pi) * 2
         denom2 = self.denom ** 2
         term2 = num2 / denom2
-        
+
         # term 3
         num3a = 2 * np.log(self.w * self.tau) * self.otc * np.cos(self.ang)
         num3b = 2 * ((self.w * self.tau) ** 2) * np.pi / 2.0 * np.sin(self.ang)
         num3c = 2 * np.log(self.w * self.tau) * self.otc2
         term3 = num3a - num3b + num3c
-        
+
         result = self.sigmai * self.m * (term1 + term2 * term3)
-        
+
         return result
-       
-        
-    def dim_dsigmai(self,pars):
+
+    def dim_dsigmai(self, pars):
         r"""
         :math:Add formula
         """
         self._set_parameters(pars)
         num1 = self.m * self.otc * np.sin(self.ang)
         result = -num1 / self.denom
-        
+
         return result
-        
+
     def dim_dlog10sigmai(self, pars):
         # first call the linear response to set the parameters
         lin_response = self.dim_dsigmai(pars)
         result = np.log(10) * self.sigmai * lin_response
-        return result    
-        
-    def dim_dm(self,pars):
+        return result
+
+    def dim_dm(self, pars):
         r"""
         :math:Add formula
         """
         self._set_parameters(pars)
         num1 = self.m * self.otc * np.sin(self.ang)
         result = -self.sigmai * num1 / self.denom
-        
+
         return result
-        
+
     def dim_dlog10m(self, pars):
         # first call the linear response to set the parameters
         lin_response = self.dim_dm(pars)
         result = np.log(10) * self.m * lin_response
-        return result    
-        
-    def dim_dtau(self,pars):
+        return result
+
+    def dim_dtau(self, pars):
         r"""
         :math:Add formula
-        """ 
+        """
         self._set_parameters(pars)
         # term 1
-        num1 = -self.m * (self.w ** self.c) * self.c * (self.tau **\
-            (self.c - 1)) * np.sin(self.ang)
+        num1 = -self.m * (self.w ** self.c) * self.c\
+            * (self.tau ** (self.c - 1)) * np.sin(self.ang)
         term1 = self.sigmai * num1 / self.denom
-        
+
         # term 2
         num2a = -self.m * self.otc * np.sin(self.ang)
         num2b = 2 * (self.w ** 2.0) * self.c * (self.tau ** (self.c - 1)) *\
             np.cos(self.ang)
-        num2c = 2 * self.c * (self.w ** (self.c * 2)) * (self.tau **\
-            (2 * self.c - 1))
+        num2c = 2 * self.c * (self.w ** (self.c * 2)) *\
+            (self.tau ** (2 * self.c - 1))
         term2 = self.sigma0 * num2a * (num2b + num2c) / (self.denom ** 2)
-        
+
         result = term1 + term2
-                 
+
         return result
-        
+
     def dim_dlog10tau(self, pars):
         # first call the linear response to set the parameters
         lin_resp = self.dim_dtau(pars)
         result = np.log(10) * self.tau * lin_resp
-        return result        
-        
-    def dim_dc(self,pars):
+        return result
+
+    def dim_dc(self, pars):
         r"""
         :math:Add formula
-        """ 
+        """
         self._set_parameters(pars)
         # term 1
-        num1a = self.m * np.sin(self.ang) * np.log(self.w * self.tau) * self.otc
+        num1a = self.m * np.sin(self.ang) * np.log(self.w * self.tau)\
+            * self.otc
         num1b = self.m * self.otc * np.pi / 2 * np.cos(np.pi / 2)
         term1 = self.sigma0 * (-num1a - num1b) / self.denom
-        
-        #term 2
+
+        # term 2
         num2a = -self.m * self.otc * np.cos(self.ang)
-        num2b = -2 * np.log(self.w * self.tau) * self.otc * np.cos(self.ang) 
+        num2b = -2 * np.log(self.w * self.tau) * self.otc * np.cos(self.ang)
         num2c = 2 * self.otc * np.pi / 2 * np.cos(self.ang)
         num2d = 2 * np.log(self.w * self.tau) * self.otc2
-        numerator = num2a * (num2b + num2c ) + num2d
+        numerator = num2a * (num2b + num2c) + num2d
         term2 = self.sigma0 * numerator / (self.denom ** 2)
-        
+
         result = term1 + term2
-        
+
         return result
 
     def test_derivatives(self):
@@ -309,4 +311,4 @@ class cc(cc_base):
         print(self.dim_dsigmai(parameters))
         print(self.dim_dm(parameters))
         print(self.dim_dtau(parameters))
-        print(self.dim_dc(parameters))        
+        print(self.dim_dc(parameters))
