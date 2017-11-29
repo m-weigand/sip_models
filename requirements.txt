@@ -1,14 +1,2 @@
-crtomo-tools==0.1.0
-cycler==0.10.0
-functools32==3.2.3.post2
-geccoinv==0.8.0
-matplotlib==2.0.2
-numpy==1.13.0
-pandas==0.20.2
-pyparsing==2.2.0
-python-dateutil==2.6.0
-pytz==2017.2
-scipy==0.19.0
-Shapely==1.6b4
-six==1.10.0
-subprocess32==3.2.7
+matplotlib
+numpy
