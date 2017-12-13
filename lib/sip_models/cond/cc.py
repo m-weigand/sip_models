@@ -143,7 +143,7 @@ class cc(cc_base):
         :math:Add formula
         """
         self._set_parameters(pars)
-        terms = self.m * self.num / self.denom
+        terms = self.num / self.denom
         result = - self.sigmai * terms
 
         return result
@@ -212,8 +212,8 @@ class cc(cc_base):
         :math:Add formula
         """
         self._set_parameters(pars)
-        num1 = self.m * self.otc * np.sin(self.ang)
-        result = -num1 / self.denom
+        result = np.sum(- self.m * self.otc * np.sin(self.ang) / self.denom,
+                        axis=1)
 
         return result
 
@@ -228,7 +228,7 @@ class cc(cc_base):
         :math:Add formula
         """
         self._set_parameters(pars)
-        num1 = self.m * self.otc * np.sin(self.ang)
+        num1 = self.otc * np.sin(self.ang)
         result = -self.sigmai * num1 / self.denom
 
         return result
