@@ -59,6 +59,19 @@ class sip_response():
 
     def _add_labels(self, axes, dtype):
         """Given a 2x2 array of axes, add x and y labels
+
+        Parameters
+        ----------
+        axes: numpy.ndarray, 2x2
+            A numpy array containing the four principal axes of an SIP plot
+        dtype: string
+            Can be either 'rho' or 'R', indicating the type of data that is
+            plotted: 'rho' stands for resistivities/conductivities, 'R' stands
+            for impedances/condactances
+
+        Returns
+        -------
+        None
         """
         for ax in axes[1, :].flat:
             ax.set_xlabel('frequency [Hz]')
@@ -74,7 +87,7 @@ class sip_response():
             axes[1, 0].set_ylabel(r"$Y'~[S]$")
             axes[1, 1].set_ylabel(r"$Y''~[S]$")
         else:
-            raise Exception('dtype not known')
+            raise Exception('dtype not known: {}'.format(dtype))
 
     def _plot(self, title=None, reciprocal=None, limits=None, dtype='rho'):
         """Standard plot of spectrum
