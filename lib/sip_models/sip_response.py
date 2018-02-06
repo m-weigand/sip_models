@@ -10,11 +10,21 @@ plt, mpl = sip_models.plot_helper.setup()
 
 
 class sip_response():
-    """
-    Hold one spectrum and return it in various formats
-
+    """ Hold one SIP spectrum and return it in various formats
     """
     def __init__(self, frequencies, rcomplex=None, ccomplex=None):
+        """
+
+        Parameters
+        ----------
+        frequencies: :class:`numpy.ndarray`
+            Array of size N containing N frequencies in ascending order
+        rcomplex: :class:`numpy.ndarray`, optional
+            Complex values resistance/resistivity values (size N)
+        ccomplex: :class:`numpy.ndarray`, optional
+            Complex values conductance/conductivity values (size N)
+
+        """
         if rcomplex is None and ccomplex is None:
             raise Exception('One initialization array is allowed!')
         if rcomplex is not None and ccomplex is not None:

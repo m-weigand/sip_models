@@ -120,11 +120,12 @@ class cc(cc_base):
         Parameters
         ----------
         parameters: list or tuple or numpy.ndarray
-        Cole-Cole model parameters: rho0, m, tau, c
+            Cole-Cole model parameters: rho0, m, tau, c (all linear)
 
         Returns
         -------
-        complex impedances/resistivity
+        response: :class:`sip_models.sip_response.sip_response`
+            model response object
         """
         # get a config object
         self._set_parameters(parameters)
