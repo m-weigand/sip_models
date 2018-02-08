@@ -13,9 +13,7 @@ def setup():
     s = {}
     s['f'] = np.logspace(-3, 3, 20)
     pars = [100, 0.1, 0.04, 0.8]
-    # pars2 = [100, 0.1, 0.1, 0.5, 0.1, 0.4, 0.6]
-
-    pars2 = [100, 0.1, 0.04, 0.8]
+    pars2 = [1000, 0.1, 0.1, 0.2]
     s['p'] = [pars, pars2]
     s['obj'] = cc.cc(s['f'])
     return s
@@ -26,6 +24,7 @@ def test_derivates(setup):
     for pars in setup['p']:
         def ffunc_re(pars):
             return obj.response(pars).rre
+
         def ffunc_im(pars):
             return obj.response(pars).rim
 
@@ -50,11 +49,20 @@ def test_derivates(setup):
 
         # log10tau
         def ffunc_re_log10tau(pars):
+            """reparameterize the response for log10(tau)"""
             pars2 = pars.copy()
             pars2[2] = 10 ** pars2[2]
-            return obj.response(pars).rre
+            return obj.response(pars2).rre
 
         Jfunc_re_log10tau = nd.Jacobian(ffunc_re_log10tau, order=4)
+
+        def ffunc_im_log10tau(pars):
+            """reparameterize the response for log10(tau)"""
+            pars2 = pars.copy()
+            pars2[2] = 10 ** pars2[2]
+            return obj.response(pars2).rim
+
+        Jfunc_im_log10tau = nd.Jacobian(ffunc_im_log10tau, order=4)
 
         pars_logtau = pars.copy()
         pars_logtau[2] = np.log10(pars_logtau[2])
@@ -62,5 +70,10 @@ def test_derivates(setup):
         assert np.allclose(
             Jfunc_re_log10tau(pars_logtau)[:, 2],
             obj.dre_dlog10tau(pars).squeeze()
+        )
+
+        assert np.allclose(
+            Jfunc_im_log10tau(pars_logtau)[:, 2],
+            obj.dim_dlog10tau(pars).squeeze()
         )
 
