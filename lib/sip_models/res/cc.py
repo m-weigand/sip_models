@@ -1,7 +1,6 @@
 # *-* coding: utf-8 *-*
-"""
-Cole-Cole model after Pelton et al. 1978
-
+""" Cole-Cole model (resistivity/resistance formulation) after Pelton et al.
+1978
 
 Pelton, W., Ward, S., Hallof, P., Sill, W., and Nelson, P. (1978). Mineral
 discrimination and removal of inductive coupling with multifrequency ip.
@@ -20,8 +19,7 @@ def _make_list(number_or_list):
 
 
 class cc_base(object):
-    """
-    Base class for Cole-Cole objects (both resistivity and conductivity)
+    """ Base class for Cole-Cole objects (both resistivity and conductivity)
     """
     def __init__(self, frequencies):
         self.f = frequencies
@@ -47,26 +45,6 @@ class cc_base(object):
             raise Exception('Input format not recognized')
 
         return rho0, m, tau, c
-
-    def test_sort_parameters(self):
-        self._sort_parameters((100, 0.1, 0.04, 0.5))
-        self._sort_parameters((100, 0.1, 0.2, 0.04, 0.004, 0.5, 0.6))
-
-        self._sort_parameters(
-            {'rho0': 100,
-             'm': 0.1,
-             'tau': 0.04,
-             'c': 0.6
-             }
-        )
-
-        self._sort_parameters(
-            {'rho0': 100,
-             'm': (0.1, 0.2),
-             'tau': (0.04, 0.004),
-             'c': (0.6, 0.8),
-             }
-        )
 
     def _set_parameters(self, parameters):
         """Sort out the various possible parameter inputs and return a config
@@ -137,27 +115,23 @@ class cc(cc_base):
 
         return response
 
-    def test_response(self):
-        parameters = {
-            'rho0': 100,
-            'm': 0.1,
-            'tau': 0.04,
-            'c': 0.8
-        }
-        parameters = {
-            'rho0': 100,
-            'm': (0.15, 0.2),
-            'tau': (0.4, 0.004),
-            'c': (0.5, 0.8),
-        }
-        resp = self.response(parameters)
-        resp.plot('test.png')
-
     def dre_drho0(self, pars):
-        r"""
+        r""" Compute partial derivative of real parts with respect to
+        :math:`\rho_0`
+
         :math:`\frac{\partial \hat{\rho'}(\omega)}{\partial \rho_0} = 1 -
         \frac{m (\omega \tau)^c cos(\frac{c \pi}{2}) + (\omega \tau)^c}{1 + 2
         (\omega \tau)^c cos(\frac{c \pi}{2}) + (\omega \tau)^{2 c}}`
+
+        Note that partial derivatives towards :math:`\rho_0` are 1D, in
+        contrast to the other parameter derivatives, which usually return 2D
+        arrays!
+
+        Returns
+        -------
+        dre_drho0: :class:`numpy.ndarray`
+            Size N (nr of frequencies) array with the derivatives
+
         """
         self._set_parameters(pars)
         numerator = self.m * self.otc * (np.cos(self.ang) + self.otc)
@@ -168,6 +142,9 @@ class cc(cc_base):
         return result
 
     def dre_dlog10rho0(self, pars):
+        """Compute partial derivative of real parts to log10(rho0)
+        """
+
         # first call the linear response to set the parameters
         linear_response = self.dre_drho0(pars)
         result = np.log(10) * self.rho0 * linear_response
@@ -359,57 +336,32 @@ class cc(cc_base):
     def Jacobian_re_im(self, pars):
         r"""
         :math:`J`
+
+        >>> import sip_models.res.cc as cc
+        >>> import numpy as np
+        >>> f = np.logspace(-3, 3, 20)
+        >>> pars = [100, 0.1, 0.04, 0.8]
+        >>> obj = cc.cc(f)
+        >>> J = obj.Jacobian_re_im(pars)
         """
         partials = []
 
         # partials.append(self.dre_dlog10rho0(pars)[:, np.newaxis, :])
-        partials.append(self.dre_drho0(pars)[:, np.newaxis, :])
+        partials.append(self.dre_drho0(pars)[:, np.newaxis])
         partials.append(self.dre_dm(pars))
         # partials.append(self.dre_dlog10tau(pars))
         partials.append(self.dre_dtau(pars))
         partials.append(self.dre_dc(pars))
         # partials.append(self.dim_dlog10rho0(pars)[:, np.newaxis, :])
-        partials.append(self.dim_drho0(pars)[:, np.newaxis, :])
+        partials.append(self.dim_drho0(pars)[:, np.newaxis])
         partials.append(self.dim_dm(pars))
         # partials.append(self.dim_dlog10tau(pars))
         partials.append(self.dim_dtau(pars))
         partials.append(self.dim_dc(pars))
+
+        print('SHAPES')
+        for x in partials:
+            print(x.shape)
+
         J = np.concatenate(partials, axis=1)
         return J
-
-    def test_derivatives(self):
-        parameters = {
-            'rho0': 100,
-            'm': 0.1,
-            'tau': 0.04,
-            'c': 0.8
-        }
-        # parameters = {
-        #     'rho0': 100,
-        #     'm': (0.15, 0.2),
-        #     'tau': (0.4, 0.004),
-        #     'c': (0.5, 0.8),
-        # }
-        print(self.dre_drho0(parameters))
-        print(self.dre_dlog10rho0(parameters))
-        print(self.dre_dm(parameters))
-        print(self.dre_dlog10m(parameters))
-        print(self.dre_dtau(parameters))
-        print(self.dre_dlog10tau(parameters))
-        print(self.dre_dc(parameters))
-
-        print(self.dim_drho0(parameters))
-        print(self.dim_dlog10rho0(parameters))
-        print(self.dim_dm(parameters))
-        print(self.dim_dlog10m(parameters))
-        print(self.dim_dtau(parameters))
-        print(self.dim_dlog10tau(parameters))
-        print(self.dim_dc(parameters))
-
-
-if __name__ == '__main__':
-
-    frequencies = np.logspace(-3, 3, 20)
-    obj = cc(frequencies)
-    # obj.test_response()
-    obj.test_derivatives()
