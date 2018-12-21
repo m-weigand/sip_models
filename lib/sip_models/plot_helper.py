@@ -65,7 +65,6 @@ def setup():
 
     if use_latex:
         mpl.rcParams['text.usetex'] = True
-        mpl.rcParams['text.latex.unicode'] = True
 
         mpl.rc(
             'text.latex',
