@@ -9,7 +9,7 @@ import sys
 # to create a windows installer
 
 version_short = '0.1'
-version_long = '0.1.2'
+version_long = '0.1.3-dev'
 
 extra = {}
 if sys.version_info >= (3,):
