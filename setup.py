@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from setuptools import setup
-import sys
+# import sys
 # from setuptools import find_packages
 # find_packages
 
@@ -12,9 +12,9 @@ version_short = '0.1'
 version_long = '0.1.3-dev'
 
 extra = {}
-if sys.version_info >= (3,):
-    print('V3')
-    extra['use_2to3'] = True
+# if sys.version_info >= (3,):
+#     print('V3')
+#     extra['use_2to3'] = True
 
 if __name__ == '__main__':
     setup(name='sip_models',
@@ -34,12 +34,15 @@ if __name__ == '__main__':
               'sip_models.cond',
           ],
           # scripts=[,],
-          install_requires=['numpy', 'scipy>=0.12', 'matplotlib'],
+          install_requires=[
+            'numpy', 'scipy>=0.12', 'matplotlib'],
           classifiers=[
               "Development Status :: 4 - Beta",
               "License :: OSI Approved :: GNU Lesser General " +
               "Public License v3 (LGPLv3)",
               "Programming Language :: Python :: 3.4",
+              "Programming Language :: Python :: 3.5",
+              "Programming Language :: Python :: 3.9",
               "Intended Audience :: Science/Research",
           ],
           **extra
