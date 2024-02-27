@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup
 version_short = '0.1'
-version_long = '0.1.3'
+version_long = '0.1.4'
 
 extra = {}
 
