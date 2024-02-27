@@ -1,13 +1,11 @@
-Introduction
-============
+# Introduction
 
 Provide Python classes for the Cole-Cole model, both in resistivity and
 conductivity formulations.
 
 This package is licenced under the GPL-3 licence.
 
-Status
-======
+## Status
 
 * implemented: sip_models.res.cc
 
@@ -19,16 +17,14 @@ Status
   Hold one spectrum and return it in various formats
 
 
-Roadmap
-=======
+## Roadmap
 
 * implement conductivity models
 * unit tests
 * Planned is also the implementation of derived models such as the Debye
   decomposition or the Warburg model.
 
-Installation
-============
+## Installation
 
 We suggest to run in a virtualenv: ::
 
@@ -41,14 +37,13 @@ For now you also need to install crtomo_tools from the git-repository
 
 Then install with: ::
 
-    python setup.py install
+    pip install .
 
 For the documentation to build, the following package are also required: ::
 
     pip install sphinx sphinxcontrib-napoleon
 
-Usage
-=====
+## Usage
 
 ::
 
@@ -86,11 +81,10 @@ Usage
     # for other formats, please look at sip_models.sip_response.py
 
 
-Planned Usage
-=============
+## Planned Usage
 
 These snippets represent the planned usage of this library. When its
-finnished...
+finished...
 
 ::
 
