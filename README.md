@@ -26,7 +26,7 @@ This package is licenced under the GPL-3 licence.
 
 ## Installation
 
-We suggest to run in a virtualenv: ::
+We suggest to run in a virtualenv:
 
     mkvirtualenv --python /usr/bin/python3 sip_models
     workon sip_models
@@ -35,7 +35,7 @@ We suggest to run in a virtualenv: ::
 
 For now you also need to install crtomo_tools from the git-repository
 
-Then install with: ::
+Then install with:
 
     pip install .
 
@@ -44,8 +44,6 @@ For the documentation to build, the following package are also required: ::
     pip install sphinx sphinxcontrib-napoleon
 
 ## Usage
-
-::
 
     import numpy as np
     frequencies = np.logspace(-3, 4, 30)
@@ -85,8 +83,6 @@ For the documentation to build, the following package are also required: ::
 
 These snippets represent the planned usage of this library. When its
 finished...
-
-::
 
     # resistivity formulation
     import sip_models.res.ccd
